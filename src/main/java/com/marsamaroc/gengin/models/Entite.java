@@ -1,12 +1,14 @@
 package com.marsamaroc.gengin.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -21,6 +23,17 @@ public class Entite {
     private String codeEntite;
     private String nomEntite;
 
+
     @OneToMany(mappedBy = "entite")
-    private List<Utilisateur> users;
+    @JsonIgnore
+    private List<Utilisateur> utilisateurList;
+
+    @OneToMany(mappedBy = "entite")
+    private List<Demande> demandeList;
+
+    @ManyToOne
+    @JoinColumn(name = "societe_id")
+    private Societe societe;
+
+
 }

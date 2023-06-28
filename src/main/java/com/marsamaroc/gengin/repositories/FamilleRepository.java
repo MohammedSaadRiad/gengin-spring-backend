@@ -1,4 +1,10 @@
 package com.marsamaroc.gengin.repositories;
 
-public interface FamilleRepository {
+import com.marsamaroc.gengin.models.Famille;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface FamilleRepository extends JpaRepository<Famille, Long> {
+
 }

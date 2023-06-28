@@ -1,10 +1,11 @@
 package com.marsamaroc.gengin.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
-
+import com.marsamaroc.gengin.models.Societe;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
 public class Utilisateur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     private String matricule;
     private String nom;
@@ -34,11 +35,7 @@ public class Utilisateur {
     private List<Demande> listDemande;
 
     @ManyToOne
+    @JoinColumn(name = "id_entite")
     private Entite entite;
-
-
-
-
-
 
 }

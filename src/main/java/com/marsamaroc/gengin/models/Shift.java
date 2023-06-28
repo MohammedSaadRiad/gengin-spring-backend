@@ -25,4 +25,5 @@ public class Shift {
     private LocalTime heureFin;
 
 
+
 }

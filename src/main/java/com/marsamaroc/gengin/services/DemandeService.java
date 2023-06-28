@@ -39,7 +39,9 @@ public class DemandeService {
     public void deleteDemande(Long demandeId){
         demandeRepository.deleteById(demandeId);
     }
+    
 
+    //mise a jour a notre demande
     public  Demande updateDemand(Long demandeId,Demande demande){
 
         Optional<Demande> checkedDemande= demandeRepository.findById(demandeId);
@@ -54,4 +56,6 @@ public class DemandeService {
         }
 
     }
+
+
 }

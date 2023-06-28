@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface UtilisateurRepository extends JpaRepository<Utilisateur,Long> {
 
+    Utilisateur findByIdentifiantAndMotDePasse(String identifiant, String motDePasse);
+
 }
