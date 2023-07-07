@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 import com.marsamaroc.gengin.models.Societe;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class Utilisateur {
     private String motDePasse;
     private Boolean active;
     private String type;
+    @CreationTimestamp
     private Date date;
     private Date dernierModification;
 

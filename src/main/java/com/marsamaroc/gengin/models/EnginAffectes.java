@@ -1,36 +1,35 @@
 package com.marsamaroc.gengin.models;
 
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.util.Date;
+import java.util.List;
 
 @Entity
+@Builder
 @Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-
-public class Engin {
-
+public class EnginAffectes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nomEngin;
-    private String codeEngin;
-    //@PositiveOrZero(message = "Les heures comptées doivent etre positives")
-    private Long Computer;
+    @CreationTimestamp
+    private Date DateAffectation;
+    @OneToMany(mappedBy = "enginAffectes")
+    private List<Engin> EnginsAffectes;
 
-    @ManyToOne
-    @JoinColumn(name = "famille_id")
-    private Famille famille;
-
-    @ManyToOne
-    @JoinColumn(name="enginsaffectes_id")
-    private EnginAffectes enginAffectes;
+    @OneToOne
+    @JoinColumn(name = "demande_numbci")
+    private Demande demande;
 
 
 

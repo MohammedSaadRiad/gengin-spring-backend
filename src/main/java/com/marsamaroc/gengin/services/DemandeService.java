@@ -1,6 +1,7 @@
 package com.marsamaroc.gengin.services;
 
 import com.marsamaroc.gengin.models.Demande;
+import com.marsamaroc.gengin.models.Societe;
 import com.marsamaroc.gengin.repositories.DemandeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -39,7 +40,14 @@ public class DemandeService {
     public void deleteDemande(Long demandeId){
         demandeRepository.deleteById(demandeId);
     }
-    
+
+
+    public Demande getDemandeById(Long id) {
+        return demandeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Demande not found with id: " + id));
+    }
+
+
 
     //mise a jour a notre demande
     public  Demande updateDemand(Long demandeId,Demande demande){

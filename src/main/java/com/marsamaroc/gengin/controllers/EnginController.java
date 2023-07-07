@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 @CrossOrigin
 @RestController
-@RequestMapping("/api/engins")
+@RequestMapping("/engins")
 public class EnginController {
 
     @Autowired
@@ -21,7 +21,7 @@ public class EnginController {
 
 
     // Get all engins
-    @GetMapping("/tousEngin")
+    @GetMapping
     public List<Engin> getAllEngins() {
         return enginRepository.findAll();
     }
@@ -36,7 +36,7 @@ public class EnginController {
     }
 
     // Create engin
-    @PostMapping("/creatEngin")
+    @PostMapping("/createEngin")
     public Engin createEngin(@RequestBody Engin engin) {
         return enginRepository.save(engin);
     }

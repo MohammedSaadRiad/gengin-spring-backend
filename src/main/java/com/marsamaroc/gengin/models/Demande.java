@@ -39,7 +39,7 @@ public class Demande {
     @JoinColumn(name="utilisateurid")
     private Utilisateur utilisateur;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany//(cascade = CascadeType.ALL)
     @JoinColumn(name = "demande_numbci")
     List<DetailsDemandes> detailsDemandeList;
 
@@ -53,9 +53,7 @@ public class Demande {
     @JoinColumn(name = "id_shift")
     private Shift shift;
 
-
-
-
-
-
+    @OneToOne//(cascade = CascadeType.ALL)
+    @JoinColumn(name = "demande_numbci")
+    private EnginAffectes EnginsAffecteALaDemande;
 }

@@ -31,7 +31,7 @@ public class UtilisateurController {
         }
     }
 
-    @PostMapping("/{addUser}")
+    @PostMapping("/addUser")
     public ResponseEntity<Utilisateur> createUtilisateur(@RequestBody Utilisateur utilisateur) {
         Utilisateur createdUtilisateur = utilisateurService.createUtilisateur(utilisateur);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUtilisateur);
