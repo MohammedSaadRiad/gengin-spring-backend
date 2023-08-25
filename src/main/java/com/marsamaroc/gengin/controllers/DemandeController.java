@@ -5,12 +5,18 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marsamaroc.gengin.models.*;
+import com.marsamaroc.gengin.repositories.CheckedCritereRepository;
+import com.marsamaroc.gengin.repositories.ControlledEnginRepository;
 import com.marsamaroc.gengin.repositories.DemandeRepository;
-import com.marsamaroc.gengin.repositories.EnginsAffectesRepository;
+import com.marsamaroc.gengin.repositories.EnginRepository;
 import com.marsamaroc.gengin.services.DemandeService;
 import com.marsamaroc.gengin.services.DetailsDemandesService;
+import com.marsamaroc.gengin.services.ResourceNotFoundException;
 import com.marsamaroc.gengin.services.ShiftService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,19 +26,25 @@ import java.util.List;
 @RestController
 @RequestMapping("/demandes")
 public class DemandeController {
-    private final DemandeService demandeService;
-    private final ShiftService shiftService;
+    @Autowired
+    private DemandeService demandeService;
+    @Autowired
+    private  ShiftService shiftService;
+    @Autowired
     private DetailsDemandesService detailsDemandesService;
-    private EnginsAffectesRepository enginsAffectesRepository;
+
+    @Autowired
     private DemandeRepository demandeRepository;
+    @Autowired
+    private EnginRepository enginRepository;
+    @Autowired
+    private ControlledEnginRepository controlledEnginRepository;
+    @Autowired
+    private CheckedCritereRepository checkedCritereRepository;
 
-    public DemandeController(DemandeService demandeService, ShiftService shiftService, DetailsDemandesService detailsDemandesService, EnginsAffectesRepository enginsAffectesRepository) {
-        this.demandeService = demandeService;
 
-        this.shiftService = shiftService;
-        this.detailsDemandesService = detailsDemandesService;
-        this.enginsAffectesRepository = enginsAffectesRepository;
-    }
+
+
 
     @GetMapping
     public List<Demande> getAllDemandes() {
@@ -55,7 +67,7 @@ public class DemandeController {
         demandeService.deleteDemande(demandeId);
     }
 
-
+    @Transactional
     @PostMapping("/Demande+ShiftID+DetailsDemandeIDs")
     public Demande TakeListOfDetailsDemandesIDs_TakeShiftIDs_TakeDemandeObject_FillDemandeAndSave(@RequestBody JsonNode jsonPayload) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -78,17 +90,31 @@ public class DemandeController {
         return SavedDemande;}
 
 
-    @PostMapping("{demandeId}/AffectEngins")
-    public Demande AffectEnginsToDemande(@PathVariable Long demandeId,@RequestBody List<Engin> ReceivedEngins){
-        EnginAffectes EnginAffectesToAssignToDemande = EnginAffectes.builder().EnginsAffectes(ReceivedEngins).build();
+    @Transactional
 
-        EnginAffectes EnginAffectesToAssignToDemandeCreated = enginsAffectesRepository.save(EnginAffectesToAssignToDemande);
-        Demande DemandeToAssignTo = demandeService.getDemandeById(demandeId);
-        DemandeToAssignTo.setEnginsAffecteALaDemande(EnginAffectesToAssignToDemandeCreated);
+    @PutMapping("{numBCI}/AffectEngins")
+    public ResponseEntity<Demande> addEnginsToDemand(@PathVariable Long numBCI, @RequestBody List<ControlledEngin> engins) {
+        // Find the demande with the numBCI
+        Demande demande = demandeRepository.findById(numBCI) .orElseThrow(() -> new ResourceNotFoundException("Demande not found with numBCI " + numBCI));
 
-        Demande DemandeToAssignToSaved = createDemande(DemandeToAssignTo);
+        // Save each ControlledEngin object to the database
+        List<ControlledEngin> managedEngins = new ArrayList<>();
+        for (ControlledEngin engin : engins) {
+            for (CheckedCritere checkedCritere : engin.getCheckedCriteres()) {
+                checkedCritere.setControlledEngin(engin);
+            }
+            engin.setDemande(demande);
 
-        return DemandeToAssignToSaved;
+            managedEngins.add(controlledEnginRepository.save(engin));
+
+        }
+
+        demande.setEnginsAssignes(managedEngins);
+
+        demande.setEtatDemande("Acceptée");
+
+        // Return the updated Demande
+        return ResponseEntity.ok(demandeRepository.save(demande));
     }
 
 
@@ -121,9 +147,46 @@ public class DemandeController {
 
         DemandeTargeted.setEtatDemande("En Attente");
 
+        if(DemandeTargeted.getEnginsAssignes() != null) {
+            for (ControlledEngin controlledEngin : DemandeTargeted.getEnginsAssignes()) {
+               controlledEngin.setDemande(null);
+               for(CheckedCritere checkedCritere :controlledEngin.getCheckedCriteres()){
+                   checkedCritere.setControlledEngin(null);
+                   checkedCritere.setCritere(null);
+                   checkedCritereRepository.delete(checkedCritere);
+               }
+
+              controlledEngin.setCheckedCriteres(null);
+               controlledEngin.setEnginControlé(null);
+               controlledEnginRepository.delete(controlledEngin);
+
+
+
+            }
+            DemandeTargeted.setEnginsAssignes(null);
+        }
+
         return demandeService.createDemande(DemandeTargeted);
 
     }
+
+    public void setEnginRepository(EnginRepository enginRepository) {
+        this.enginRepository = enginRepository;
+    }
+
+    @GetMapping("/filter")
+    public List<Demande> getDemandesByFilters(
+            @RequestParam(required = false) Boolean enAttente,
+            @RequestParam(required = false) Boolean acceptee,
+            @RequestParam(required = false) Boolean refusee
+    ) {
+        System.out.println("enAttente: " + enAttente);
+        System.out.println("acceptee: " + acceptee);
+        System.out.println("refusee: " + refusee);
+        return demandeRepository.findWithFilters(enAttente, acceptee, refusee);
+    }
+
+
     // @PutMapping("/{demandeId}")
   //  public Demande setShiftofDemande (@RequestBody List<Long>ShiftID @PathVariable Long demandeId){
 

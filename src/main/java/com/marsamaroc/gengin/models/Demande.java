@@ -1,6 +1,7 @@
 package com.marsamaroc.gengin.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
@@ -11,6 +12,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -19,8 +21,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "numBCI")
-public class Demande {
+@JsonIdentityInfo(scope = Demande.class,generator = ObjectIdGenerators.PropertyGenerator.class, property = "numBCI")
+public class Demande implements Serializable {
 
 
     @Column(name = "demande_numbci")
@@ -34,12 +36,12 @@ public class Demande {
     private Date dateCreation;
     private Date dernierModification;
     private String EtatDemande;
-
+    //@JsonIgnore
     @ManyToOne
     @JoinColumn(name="utilisateurid")
     private Utilisateur utilisateur;
 
-    @OneToMany//(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "demande_numbci")
     List<DetailsDemandes> detailsDemandeList;
 
@@ -53,7 +55,9 @@ public class Demande {
     @JoinColumn(name = "id_shift")
     private Shift shift;
 
-    @OneToOne//(cascade = CascadeType.ALL)
-    @JoinColumn(name = "demande_numbci")
-    private EnginAffectes EnginsAffecteALaDemande;
+    @OneToMany(mappedBy = "Demande", cascade = CascadeType.PERSIST)
+    private List<ControlledEngin> enginsAssignes;
+
+
+
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(scope = Utilisateur.class,generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Getter
 @Setter
 public class Utilisateur {
@@ -33,12 +33,16 @@ public class Utilisateur {
     @CreationTimestamp
     private Date date;
     private Date dernierModification;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "utilisateur")
     private List<Demande> listDemande;
 
     @ManyToOne
     @JoinColumn(name = "id_entite")
     private Entite entite;
+
+    @ManyToOne
+    @JoinColumn(name = "id_societe")
+    private Societe societe;
 
 }

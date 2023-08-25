@@ -26,10 +26,6 @@ public class UtilisateurService {
         return utilisateurRepository.save(utilisateur);
     }
 
-    public Utilisateur updateUtilisateur(Utilisateur utilisateur) {
-        return utilisateurRepository.save(utilisateur);
-    }
-
     public void deleteUtilisateur(Long id) {
         utilisateurRepository.deleteById(id);
     }

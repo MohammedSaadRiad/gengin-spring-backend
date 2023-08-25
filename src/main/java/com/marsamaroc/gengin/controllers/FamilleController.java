@@ -1,6 +1,8 @@
 package com.marsamaroc.gengin.controllers;
 
+import com.marsamaroc.gengin.models.Engin;
 import com.marsamaroc.gengin.models.Famille;
+import com.marsamaroc.gengin.services.EnginService;
 import com.marsamaroc.gengin.services.FamilleService;
 import com.marsamaroc.gengin.services.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/familles")
 public class FamilleController {
-
+      @Autowired
+      private EnginService enginService;
     @Autowired
     private FamilleService familleService;
 
@@ -28,6 +31,8 @@ public class FamilleController {
 
     @PostMapping("/addFamille")
     public Famille createFamille(@RequestBody Famille famille) {
+
+
         return familleService.createFamille(famille);
     }
 
@@ -38,6 +43,11 @@ public class FamilleController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteFamille(@PathVariable Long id) throws ResourceNotFoundException {
+
+        Famille familleToDelete = familleService.getFamilleById(id);
+        /*for(Engin enginFamille : familleToDelete.getEngins()){
+            enginService.deleteEngin(enginFamille.getId());
+        }*/
         familleService.deleteFamille(id);
         return ResponseEntity.ok().build();
     }

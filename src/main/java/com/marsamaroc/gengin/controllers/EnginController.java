@@ -4,6 +4,7 @@ import com.marsamaroc.gengin.models.Engin;
 import com.marsamaroc.gengin.models.Famille;
 import com.marsamaroc.gengin.repositories.EnginRepository;
 import com.marsamaroc.gengin.services.ResourceNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,15 +43,19 @@ public class EnginController {
     }
 
     // Update engin
+
+    @Transactional
     @PutMapping("/{id}")
     public ResponseEntity<Engin> updateEngin(@PathVariable(value = "id") Long enginId,
                                               @RequestBody Engin enginDetails) throws ResourceNotFoundException {
         Engin engin = enginRepository.findById(enginId)
                 .orElseThrow(() -> new ResourceNotFoundException("Engin not found for this id :: " + enginId));
-        engin.setNomEngin(enginDetails.getNomEngin());
-        engin.setCodeEngin(enginDetails.getCodeEngin());
-
-        engin.setFamille(enginDetails.getFamille());
+       if(enginDetails.getNomEngin() != null) {
+        engin.setNomEngin(enginDetails.getNomEngin());}
+       if(enginDetails.getCodeEngin() != null){
+        engin.setCodeEngin(enginDetails.getCodeEngin());}
+        if(enginDetails.getFamille() != null ){
+            engin.setFamille(enginDetails.getFamille());}
         final Engin updatedEngin = enginRepository.save(engin);
         return ResponseEntity.ok(updatedEngin);
     }

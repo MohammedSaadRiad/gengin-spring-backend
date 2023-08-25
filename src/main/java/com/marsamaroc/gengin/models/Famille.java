@@ -1,6 +1,7 @@
 package com.marsamaroc.gengin.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(scope = Famille.class,generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Famille {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +22,10 @@ public class Famille {
     private String codeFamille;
     private String nomFamille;
     private String imageUrl;
-
+    /*@JsonIgnore
     @OneToMany(mappedBy = "famille")
-    private List<Engin> engins;
+    private List<Engin> engins;*/
+
 
 
     //fonctions to implement

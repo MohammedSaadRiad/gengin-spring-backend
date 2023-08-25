@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(scope = Entite.class,generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Entite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,12 +28,13 @@ public class Entite {
     @JsonIgnore
     private List<Utilisateur> utilisateurList;
 
-    @OneToMany(mappedBy = "entite")
-    private List<Demande> demandeList;
+    /*@OneToMany(mappedBy = "entite")
+    private List<Demande> demandeList;*/
 
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name = "societe_id")
     private Societe societe;
+*/
 
 
 }

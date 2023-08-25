@@ -16,8 +16,15 @@ public class SocieteService {
     }
 
     public Societe createSociete(Societe societe) {
-        return societeRepository.save(societe);
-    }
+
+
+        societe.setActive(true);
+
+        return societeRepository.save(societe);}
+
+
+
+
 
     public Societe getSocieteById(Long id) {
         return societeRepository.findById(id)
@@ -30,11 +37,13 @@ public class SocieteService {
 
     public Societe updateSociete(Long id, Societe updatedSociete) {
         Societe existingSociete = getSocieteById(id);
-        existingSociete.setCodeSociete(updatedSociete.getCodeSociete());
-        existingSociete.setNomSociete(updatedSociete.getNomSociete());
-        existingSociete.setActive(updatedSociete.getActive());
-        existingSociete.setDateCreation(updatedSociete.getDateCreation());
-        existingSociete.setDerniereModification(updatedSociete.getDerniereModification());
+        if(updatedSociete.getCodeSociete() != null){
+        existingSociete.setCodeSociete(updatedSociete.getCodeSociete());}
+        if(updatedSociete.getNomSociete() != null){
+        existingSociete.setNomSociete(updatedSociete.getNomSociete());}
+        if(updatedSociete.getActive() !=null){
+        existingSociete.setActive(updatedSociete.getActive());}
+
         return societeRepository.save(existingSociete);
     }
 

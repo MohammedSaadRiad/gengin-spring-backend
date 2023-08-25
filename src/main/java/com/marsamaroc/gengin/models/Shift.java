@@ -10,19 +10,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalTime;
+//import java.time.LocalTime;
+
+import org.joda.time.LocalTime;
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(scope = Shift.class,generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Shift {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String codeShift;
-    private LocalTime heureDebut;
-    private LocalTime heureFin;
+    private String heureDebut;
+    private String heureFin;
 
 
 

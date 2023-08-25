@@ -34,9 +34,10 @@ public class EntiteService {
     public Entite updateEntite(Long id, Entite updatedEntite) {
         Entite existingEntite = entiteRepository.findById(id)
                 .orElseThrow(() -> new EmptyResultDataAccessException("Entite not found with id: " + id,902));
-
-        existingEntite.setCodeEntite(updatedEntite.getCodeEntite());
-        existingEntite.setNomEntite(updatedEntite.getNomEntite());
+        if (updatedEntite.getCodeEntite() != null) {
+        existingEntite.setCodeEntite(updatedEntite.getCodeEntite());}
+        if (updatedEntite.getNomEntite() != null) {
+        existingEntite.setNomEntite(updatedEntite.getNomEntite());}
 
         return entiteRepository.save(existingEntite);
     }

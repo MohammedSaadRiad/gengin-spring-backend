@@ -6,13 +6,15 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+// @JsonIdentityInfo(scope=Engin.class ,generator = ObjectIdGenerators.PropertyGenerator.class, property = "id" )
 
 public class Engin {
 
@@ -24,13 +26,11 @@ public class Engin {
     //@PositiveOrZero(message = "Les heures comptées doivent etre positives")
     private Long Computer;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "famille_id")
     private Famille famille;
 
-    @ManyToOne
-    @JoinColumn(name="enginsaffectes_id")
-    private EnginAffectes enginAffectes;
+    private Boolean EnPanne;
 
 
 

@@ -29,10 +29,14 @@ public class ShiftService {
     }
 
     public Shift updateShift(Long id, Shift updatedShift) {
+
         Shift existingShift = getShiftById(id);
-        existingShift.setCodeShift(updatedShift.getCodeShift());
-        existingShift.setHeureDebut(updatedShift.getHeureDebut());
-        existingShift.setHeureFin(updatedShift.getHeureFin());
+        if(updatedShift.getCodeShift() != null ) {
+        existingShift.setCodeShift(updatedShift.getCodeShift());}
+        if(updatedShift.getHeureDebut() != null ) {
+        existingShift.setHeureDebut(updatedShift.getHeureDebut());}
+            if(updatedShift.getHeureFin() != null ) {
+        existingShift.setHeureFin(updatedShift.getHeureFin());}
         return shiftRepository.save(existingShift);
     }
 

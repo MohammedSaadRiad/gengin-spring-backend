@@ -44,9 +44,9 @@ public class FamilleService {
         if (familleDetails.getImageUrl() != null) {
             famille.setImageUrl(familleDetails.getImageUrl());
         }
-        if (familleDetails.getEngins() != null) {
+        /*if (familleDetails.getEngins() != null) {
             famille.setEngins(familleDetails.getEngins());
-        }
+        }*/
 
         return familleRepository.save(famille);
     }

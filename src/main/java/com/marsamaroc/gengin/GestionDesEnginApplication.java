@@ -14,12 +14,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 public class GestionDesEnginApplication {
 
 	public static void main(String[] args) {
-		ObjectMapper mapper = JsonMapper.builder() // or different mapper for other format
-				.addModule(new ParameterNamesModule())
-				.addModule(new Jdk8Module())
-				.addModule(new JavaTimeModule())
-				// and possibly other configuration, modules, then:
-				.build();
+
 
 		SpringApplication.run(GestionDesEnginApplication.class, args);
 

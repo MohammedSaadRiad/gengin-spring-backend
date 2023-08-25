@@ -1,6 +1,7 @@
 package com.marsamaroc.gengin.controllers;
 
 import com.marsamaroc.gengin.models.Utilisateur;
+import com.marsamaroc.gengin.repositories.UtilisateurRepository;
 import com.marsamaroc.gengin.services.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/utilisateurs")
 public class UtilisateurController {
-
+   @Autowired
+   private UtilisateurRepository utilisateurRepository;
     @Autowired
     private UtilisateurService utilisateurService;
 
@@ -40,15 +42,37 @@ public class UtilisateurController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Utilisateur> updateUtilisateur(@PathVariable Long id, @RequestBody Utilisateur utilisateur) {
+    public Utilisateur updateUtilisateur(@PathVariable Long id, @RequestBody Utilisateur Receivedutilisateur) {
         Utilisateur existingUtilisateur = utilisateurService.getUtilisateurById(id);
-        if (existingUtilisateur != null) {
-            utilisateur.setId(id);
-            Utilisateur updatedUtilisateur = utilisateurService.updateUtilisateur(utilisateur);
-            return ResponseEntity.ok(updatedUtilisateur);
-        } else {
-            return ResponseEntity.notFound().build();
+
+        if(Receivedutilisateur.getActive() != null){
+            existingUtilisateur.setActive(Receivedutilisateur.getActive());
         }
+        if(Receivedutilisateur.getMatricule() != null){
+            existingUtilisateur.setMatricule(Receivedutilisateur.getMatricule());
+        }
+        if(Receivedutilisateur.getEntite() != null){
+            existingUtilisateur.setEntite(Receivedutilisateur.getEntite());
+        }
+        if(Receivedutilisateur.getNom() != null){
+            existingUtilisateur.setNom(Receivedutilisateur.getNom());
+        }
+        if(Receivedutilisateur.getIdentifiant()!= null){
+            existingUtilisateur.setIdentifiant(Receivedutilisateur.getIdentifiant());
+        }
+        if(Receivedutilisateur.getPrenom()!= null){
+            existingUtilisateur.setPrenom(Receivedutilisateur.getPrenom());
+        }
+        if(Receivedutilisateur.getMotDePasse()!= null){
+            existingUtilisateur.setMotDePasse(Receivedutilisateur.getMotDePasse());
+        }
+        if(Receivedutilisateur.getSociete()!= null){
+            existingUtilisateur.setSociete(Receivedutilisateur.getSociete());
+        }
+
+
+        return utilisateurRepository.save(existingUtilisateur);
+
     }
 
     @DeleteMapping("/{id}")

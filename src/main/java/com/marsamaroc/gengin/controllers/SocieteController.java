@@ -40,6 +40,7 @@ public class SocieteController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Societe> updateSociete(@PathVariable Long id, @RequestBody Societe updatedSociete) {
+
         Societe societe = societeService.updateSociete(id, updatedSociete);
         return new ResponseEntity<>(societe, HttpStatus.OK);
     }

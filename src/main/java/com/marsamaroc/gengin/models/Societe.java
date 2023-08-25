@@ -1,6 +1,8 @@
 package com.marsamaroc.gengin.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,6 +13,7 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 @Data
 @Entity
+@JsonIdentityInfo(scope = Societe.class,generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Societe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -23,6 +26,10 @@ public class Societe {
     private Date dateCreation;
     private Date derniereModification;
 
+    //@OneToMany(mappedBy = "societe")
+    //private List<Entite> entiteList;
+
     @OneToMany(mappedBy = "societe")
-    private List<Entite> entiteList;
+
+    private List<Utilisateur> ListeUtilisateur;
 }

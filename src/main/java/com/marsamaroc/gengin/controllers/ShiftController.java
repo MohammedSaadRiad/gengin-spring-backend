@@ -5,8 +5,12 @@ import com.marsamaroc.gengin.services.ShiftService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.List;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/shifts")
@@ -18,10 +22,30 @@ public class ShiftController {
     }
 
     @PostMapping("/addShift")
-    public ResponseEntity<Shift> createShift(@RequestBody Shift shift) {
-        Shift createdShift = shiftService.createShift(shift);
+   public ResponseEntity<Shift> createShift(@RequestBody Shift shift) {
+       Shift createdShift = shiftService.createShift(shift);
+       return new ResponseEntity<>(createdShift, HttpStatus.CREATED);
+   }
+
+  /*  @PostMapping
+    public ResponseEntity<Shift> createShift(@RequestBody Shift ReceivedShift) {
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm");
+
+
+        String HeureDebutReceived = String.valueOf(ReceivedShift.getHeureDebut());
+        String HeureFinToReceived = String.valueOf(ReceivedShift.getHeureFin());
+        LocalTime HeureDebutToCreate = dtf.parseLocalTime(HeureDebutReceived);
+        LocalTime HeureFinToCreate = dtf.parseLocalTime(HeureFinToReceived);
+        Shift createdShift = new Shift();
+        createdShift.setCodeShift(ReceivedShift.getCodeShift());
+        createdShift.setHeureDebut(HeureDebutToCreate);
+        createdShift.setHeureFin(HeureFinToCreate);
+
+
+        shiftService.createShift(createdShift);
         return new ResponseEntity<>(createdShift, HttpStatus.CREATED);
     }
+*/
 
   /*  @GetMapping("/{id}")
     public ResponseEntity<Shift> getShiftById(@PathVariable Long id) {
